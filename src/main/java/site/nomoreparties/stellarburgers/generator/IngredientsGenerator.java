@@ -1,5 +1,6 @@
 package site.nomoreparties.stellarburgers.generator;
 
+import io.qameta.allure.Step;
 import org.apache.commons.lang3.RandomStringUtils;
 import site.nomoreparties.stellarburgers.dto.OrderRequestBody;
 
@@ -10,7 +11,7 @@ import java.util.Random;
 import static io.restassured.RestAssured.given;
 
 public class IngredientsGenerator {
-
+    @Step("Generate order data with correct ingredients")
     public static OrderRequestBody getRandomOrderCorrectRequestBody() {
         ArrayList<Map<String, String>> buns = new ArrayList<>();
         ArrayList<Map<String, String>> mains = new ArrayList<>();
@@ -21,7 +22,6 @@ public class IngredientsGenerator {
                 .then()
                 .extract()
                 .path("data");
-
 
         for (int i = 0; i < ingredients.size(); i++) {
             if ((ingredients.get(i).get("type")).equals("bun"))
@@ -47,6 +47,7 @@ public class IngredientsGenerator {
         return orderRequestBody;
     }
 
+    @Step("Generate order data with wrong hash of ingredients")
     public static OrderRequestBody getRandomOrderRequestBodyWrongHash() {
         ArrayList<String> randomIngredients = new ArrayList<>();
         OrderRequestBody orderRequestBody = new OrderRequestBody();
@@ -57,17 +58,9 @@ public class IngredientsGenerator {
         return orderRequestBody;
     }
 
-
+    @Step("Generate order data without ingredients")
     public static OrderRequestBody getRandomOrderRequestBodyWithoutIngredients() {
         OrderRequestBody orderRequestBody = new OrderRequestBody();
         return orderRequestBody;
     }
-
 }
-
-
-
-
-
-
-

@@ -27,7 +27,7 @@ public class GetOrderTest {
     }
 
     @After
-    public void tearDown() {
+    public void deleteUser() {
         if (accessToken != null)
             userRequest.delete(accessToken)
                     .assertThat()
@@ -91,7 +91,3 @@ public class GetOrderTest {
                 .body("message", equalTo("You should be authorised"));
     }
 }
-
-
-
-

@@ -2,9 +2,7 @@ package site.nomoreparties.stellarburgers;
 
 import com.github.javafaker.Faker;
 import io.qameta.allure.junit4.DisplayName;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import site.nomoreparties.stellarburgers.dto.ChangeUserDataRequestBody;
 import site.nomoreparties.stellarburgers.dto.LoginRequestBody;
 import site.nomoreparties.stellarburgers.dto.RegistrationRequestBody;
@@ -15,13 +13,22 @@ import static org.hamcrest.Matchers.equalTo;
 import static site.nomoreparties.stellarburgers.generator.RegistrationRequestBodyGenerator.getRandomRegistrationRequestBody;
 
 public class ChangeUserDataTest {
-    private static UserRequest userRequest;
-    private static String accessToken;
+    private UserRequest userRequest;
+    private String accessToken;
+    private ChangeUserDataRequestBody changeUserDataRequestBody;
 
-    @BeforeClass
-    public static void createUser() {
+    @Before
+    public void setUp() {
         userRequest = new UserRequest();
+        changeUserDataRequestBody = new ChangeUserDataRequestBody();
+        Faker faker = new Faker();
+        changeUserDataRequestBody.setEmail(faker.internet().emailAddress());
+        changeUserDataRequestBody.setName(faker.name().name());
+    }
 
+    @Test
+    @DisplayName("User data should change with auth")
+    public void userDataShouldChangeWithAuth() {
         RegistrationRequestBody randomRegistrationUserBody = getRandomRegistrationRequestBody();
 
         userRequest.createUser(randomRegistrationUserBody)
@@ -43,24 +50,6 @@ public class ChangeUserDataTest {
                 .path("accessToken");
         if (accessTokenFull != null)
             accessToken = accessTokenFull.replace("Bearer ", "");
-    }
-
-
-    @AfterClass
-    public static void deleteUser() {
-        if (accessToken != null)
-            userRequest.delete(accessToken)
-                    .assertThat()
-                    .statusCode(SC_ACCEPTED);
-    }
-
-    @Test
-    @DisplayName("User data should change with auth")
-    public void userDataShouldChangeWithAuth() {
-        ChangeUserDataRequestBody changeUserDataRequestBody = new ChangeUserDataRequestBody();
-        Faker faker = new Faker();
-        changeUserDataRequestBody.setEmail(faker.internet().emailAddress());
-        changeUserDataRequestBody.setName(faker.name().name());
 
         userRequest.changeUserDataWithAuth(changeUserDataRequestBody, accessToken)
                 .assertThat()
@@ -71,16 +60,17 @@ public class ChangeUserDataTest {
                 .body("user.email", equalTo(changeUserDataRequestBody.getEmail()))
                 .and()
                 .body("user.name", equalTo(changeUserDataRequestBody.getName()));
+
+        if (accessToken != null)
+            userRequest.delete(accessToken)
+                    .assertThat()
+                    .statusCode(SC_ACCEPTED);
     }
 
     @Test
     @DisplayName("User data should not change without auth")
     public void userDataShouldNotChangeWithoutAuth() {
-        ChangeUserDataRequestBody changeUserDataRequestBody = new ChangeUserDataRequestBody();
-        Faker faker = new Faker();
-        changeUserDataRequestBody.setEmail(faker.internet().emailAddress());
-        changeUserDataRequestBody.setName(faker.name().name());
-
+        System.out.println(changeUserDataRequestBody.getEmail() + changeUserDataRequestBody.getName());
         userRequest.changeUserDataWithoutAuth(changeUserDataRequestBody)
                 .assertThat()
                 .statusCode(SC_UNAUTHORIZED)
@@ -89,6 +79,4 @@ public class ChangeUserDataTest {
                 .and()
                 .body("message", equalTo("You should be authorised"));
     }
-
-
 }

@@ -73,6 +73,5 @@ public class LoginTest {
                 .body("success", equalTo(false))
                 .and()
                 .body("message", equalTo("email or password are incorrect"));
-
     }
 }

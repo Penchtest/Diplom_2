@@ -26,7 +26,6 @@ public class MakeOrderTest {
         orderRequest = new OrderRequest();
     }
 
-
     @After
     public void tearDown() {
         if (accessToken != null)
@@ -46,7 +45,6 @@ public class MakeOrderTest {
                 .body("success", equalTo(true))
                 .and()
                 .body("order.number", notNullValue());
-
     }
 
     @Test
@@ -83,7 +81,6 @@ public class MakeOrderTest {
                 .body("success", equalTo(true))
                 .and()
                 .body("order.number", notNullValue());
-
     }
 
     @Test
@@ -107,6 +104,4 @@ public class MakeOrderTest {
                 .and()
                 .body("message", equalTo("Ingredient ids must be provided"));
     }
-
-
 }

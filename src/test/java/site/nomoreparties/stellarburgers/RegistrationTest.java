@@ -12,11 +12,9 @@ import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.equalTo;
 import static site.nomoreparties.stellarburgers.generator.RegistrationRequestBodyGenerator.*;
 
-
 public class RegistrationTest {
     private UserRequest userRequest;
     private String accessToken;
-
 
     @Before
     public void setUp() {
@@ -34,7 +32,6 @@ public class RegistrationTest {
     @Test
     @DisplayName("User should be created")
     public void userShouldBeCreated() {
-
         RegistrationRequestBody randomRegistrationUserBody = getRandomRegistrationRequestBody();
 
         userRequest.createUser(randomRegistrationUserBody)
@@ -89,7 +86,6 @@ public class RegistrationTest {
                 .body("success", equalTo(false))
                 .and()
                 .body("message", equalTo("Email, password and name are required fields"));
-
     }
 
     @Test
